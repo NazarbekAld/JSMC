@@ -3,13 +3,13 @@ JavaScript for Paper/Bukkit
 
 # Commands
 ```
-/jsmc relaodcache - Reload script list.
+/jsmc reloadcache - Reload script list.
 /jsmc enable <script> - enable script.
 /jsmc disable <script> - disable script.
-/jsmc scrpts - list of scripts
+/jsmc scripts - list of scripts
 ```
 
-# How to add script.
+# How to add the scripts.
 Put in folder ../plugins/JSMC/Scripts/ the scripts.
 
 # Example
