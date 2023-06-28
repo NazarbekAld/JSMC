@@ -1,0 +1,2 @@
+# JSMC
+JavaScript for Bukkit
