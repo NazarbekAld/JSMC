@@ -1,0 +1,8 @@
+name: JSMC
+version: '${project.version}'
+main: me.nazarxexe.jsmc.JSMC
+api-version: 1.19
+commands:
+  jsmc:
+    permission: nazarxexe.script.admin
+    description: "Scripts controller"
