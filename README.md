@@ -28,7 +28,7 @@ Simple lifesteal script:
 ```javascript
 function start() {
     console.info("Enabled.")
-    listener.registerListener("PlayerDeathEvent" /* Event name */, "stealHeart" /* Function name */, root /* Script ref */);
+    listener.registerListener("PlayerDeathEvent" /* Event name */, stealHeart /* Function */, root /* Script ref */);
 }
 function stop() {
 }
@@ -57,7 +57,7 @@ Simple broadcast script
 ```javascript
 // Async call
 function start() { // sync call
-    scheduler.runTaskTimer("hello_world" /* Function name */, 20 /* Ticks */)
+    scheduler.runTaskTimer(hello_world /* Function */, 20 /* Ticks */)
 }
 function stop() { // sync call
 }

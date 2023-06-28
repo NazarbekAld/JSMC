@@ -8,8 +8,7 @@ import me.nazarxexe.jsmc.command.subcommands.Enable;
 import me.nazarxexe.jsmc.command.subcommands.ReloadCache;
 import me.nazarxexe.jsmc.command.subcommands.Scripts;
 import me.nazarxexe.jsmc.event.Listener;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -77,5 +76,6 @@ public final class JSMC extends JavaPlugin {
                 .filter(file -> !file.isDirectory())
                 .collect(Collectors.toSet());
     }
+
 
 }

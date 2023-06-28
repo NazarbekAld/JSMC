@@ -3,7 +3,6 @@ package me.nazarxexe.jsmc.event;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
-import io.github.classgraph.ScanResult;
 import lombok.Getter;
 import me.nazarxexe.jsmc.JSMC;
 import me.nazarxexe.jsmc.Script;
@@ -11,17 +10,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
-import org.graalvm.polyglot.Value;
 import org.jetbrains.annotations.NotNull;
 
-import javax.script.Invocable;
-import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class Listener implements org.bukkit.event.Listener {
@@ -42,14 +36,9 @@ public class Listener implements org.bukkit.event.Listener {
             public void execute(org.bukkit.event.@NotNull Listener listener, @NotNull Event event) throws EventException {
                 for (ListenerScript function : functions) {
                     if(!(event.getEventName().equals(function.getEvent()))) continue;
-                    Invocable invocable = (Invocable) function.getScript().engine;
-
-                    try {
-                        invocable.invokeFunction(function.getFunction(), event);
-                    } catch (ScriptException | NoSuchMethodException e) {
-                        function.getScript().logger.error("Failed to execute function listener.", e);
-                    }
+                    function.getFunction().run(event);
                 }
+
             }
         };
 
@@ -77,7 +66,7 @@ public class Listener implements org.bukkit.event.Listener {
 
     }
 
-    public void registerListener(String event, String function, Script script) {
+    public void registerListener(String event, RunnableListener function, Script script) {
         functions.add(new ListenerScript(function, event, script));
     }
 
