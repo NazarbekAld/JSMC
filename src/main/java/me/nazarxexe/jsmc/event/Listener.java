@@ -3,15 +3,16 @@ package me.nazarxexe.jsmc.event;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
-import lombok.Getter;
 import me.nazarxexe.jsmc.JSMC;
 import me.nazarxexe.jsmc.Script;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
+import org.graalvm.polyglot.Value;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -21,31 +22,16 @@ import java.util.List;
 public class Listener implements org.bukkit.event.Listener {
 
     final List<Script> script = JSMC.activeScripts;
-    final Plugin plugin;
-    @Getter
-    List<ListenerScript> functions;
+    final Script root;
 
-    public Listener(Plugin plugin) {
-        this.plugin = plugin;
+    final org.bukkit.event.Listener listener = new org.bukkit.event.Listener() {};
 
-        this.functions = new ArrayList<>();
+    public static final List<Class<? extends Event>> eventClasses = new ArrayList<>();
 
-        org.bukkit.event.Listener listener = new org.bukkit.event.Listener() {};
-        EventExecutor executor = new EventExecutor() {
-            @Override
-            public void execute(org.bukkit.event.@NotNull Listener listener, @NotNull Event event) throws EventException {
-                for (ListenerScript function : functions) {
-                    if(!(event.getEventName().equals(function.getEvent()))) continue;
-                    function.getFunction().run(event);
-                }
-
-            }
-        };
-
-         ClassInfoList events = new ClassGraph()
+    public static void scanEventClasses(Plugin plugin) {
+        ClassInfoList events = new ClassGraph()
                 .enableClassInfo()
-                 .verbose()
-                .scan() //you should use try-catch-resources instead
+                .scan()
                 .getClassInfo(Event.class.getName())
                 .getSubclasses()
                 .filter(info -> !info.isAbstract());
@@ -56,22 +42,38 @@ public class Listener implements org.bukkit.event.Listener {
 
                 if (Arrays.stream(eventClass.getDeclaredMethods()).anyMatch(method ->
                         method.getParameterCount() == 0 && method.getName().equals("getHandlers"))) {
-                    Bukkit.getPluginManager().registerEvent(eventClass, listener,
-                            EventPriority.NORMAL, executor, plugin);
+                    eventClasses.add(eventClass);
                 }
             }
         } catch (ClassNotFoundException e) {
             throw new AssertionError("Scanned class wasn't found", e);
         }
-
     }
 
-    public void registerListener(String event, RunnableListener function, Script script) {
-        functions.add(new ListenerScript(function, event, script));
+
+    public Listener(Script root) {
+        this.root = root;
     }
 
-    public void unRegisterAll(Script script) {
-        functions.removeIf((func) -> func.getScript().file.getName().equals(script.file.getName()));
+    public void registerListener(String event, Value function) {
+
+        Class<? extends Event> eventClass = eventClasses.stream()
+                .filter((evc) -> evc.getSimpleName().equals(event))
+                .findAny().orElseThrow();
+
+        Bukkit.getPluginManager().registerEvent(eventClass,
+                listener, EventPriority.NORMAL, new EventExecutor() {
+                            private final Value listenerFunc = function;
+                            @Override
+                            public void execute(org.bukkit.event.@NotNull Listener listener, @NotNull Event event) throws EventException {
+                                listenerFunc.execute(event);
+                            }
+
+                        }, root.plugin);
+    }
+
+    public void unRegisterAll() {
+        HandlerList.unregisterAll(listener);
     }
 
 }

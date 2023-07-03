@@ -25,7 +25,7 @@ public class Scripts implements JSMCSubCommand {
             return;
         }
 
-        ScriptEngineFactory info = JSMC.activeScripts.get(0).engine.getFactory();
+        ScriptEngineFactory info = JSMC.activeScripts.get(0).getEngine().getFactory();
 
         sender.sendMessage(ChatColor.GRAY + "JSEngine: " + info.getEngineName(), "V" + info.getEngineVersion(), " | JS-" + info.getLanguageVersion() + "V");
         sender.sendMessage("List of available scripts:");

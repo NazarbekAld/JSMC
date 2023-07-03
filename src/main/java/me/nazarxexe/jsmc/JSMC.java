@@ -3,13 +3,13 @@ package me.nazarxexe.jsmc;
 import lombok.Getter;
 import lombok.Setter;
 import me.nazarxexe.jsmc.command.JSMCCommand;
-import me.nazarxexe.jsmc.command.subcommands.Disable;
-import me.nazarxexe.jsmc.command.subcommands.Enable;
-import me.nazarxexe.jsmc.command.subcommands.ReloadCache;
-import me.nazarxexe.jsmc.command.subcommands.Scripts;
+import me.nazarxexe.jsmc.command.subcommands.*;
 import me.nazarxexe.jsmc.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,21 +24,17 @@ public final class JSMC extends JavaPlugin {
     @Getter
     @Deprecated // DO NOT USE FOR NOW.
     private static File libs;
+
     @Getter
     public final static List<Script> activeScripts = new ArrayList<>();
-    @Getter
-    private static Listener listener;
-
-    @Override
-    public void onLoad() {
-
-    }
+    public static final Logger logger = LoggerFactory.getLogger("JSMC");
 
     @Override
     public void onEnable() {
         getDataFolder().mkdir();
-        getLogger().info("Loading all events...");
-        listener=new Listener(this);
+        logger.info("Loading all events... Please wait.");
+        Listener.scanEventClasses(this);
+
         activeScripts.clear();
         scripts = new File(getDataFolder(), "scripts");
 //        libs = new File(getDataFolder(), "libs");
@@ -58,6 +54,7 @@ public final class JSMC extends JavaPlugin {
         command.getSubCommands().add(new Enable());
         command.getSubCommands().add(new ReloadCache(this));
         command.getSubCommands().add(new Scripts());
+        command.getSubCommands().add(new Create(this));
 
         getCommand("jsmc").setExecutor(command);
         getCommand("jsmc").setTabCompleter(command);

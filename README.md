@@ -6,6 +6,7 @@ JavaScript for Paper/Bukkit
 /jsmc reloadcache - Reload script list.
 /jsmc enable <script> - enable script.
 /jsmc disable <script> - disable script.
+/jsmc create <project name> - create new script.
 /jsmc scripts - list of scripts
 ```
 
@@ -13,66 +14,49 @@ JavaScript for Paper/Bukkit
 Put in folder ../plugins/JSMC/Scripts/ the scripts.
 
 # Example
-Empty:
+
 ```javascript
-// Async call
-function start() { // sync call
+const root = Polyglot.import("root"); // root
+const console = Polyglot.import("console");
+const commandMap = Polyglot.import("commandMap"); // commandMap
+const listener = Polyglot.import("listener"); // Listener
+const scheduler = Polyglot.import("scheduler"); // scheduler
+const server = Polyglot.import("server") // Server
+
+// Script props:
+const config = {
+
+    name: "hello_world", // More for logger/command_prefix
     
-}
-function stop() { // sync call
-}
-```
+    onEnable: start,
+    onDisable: stop // Optional
 
+}
 
-Simple lifesteal script:
-```javascript
 function start() {
-    console.info("Enabled.")
-    listener.registerListener("PlayerDeathEvent" /* Event name */, stealHeart /* Function */, root /* Script ref */);
+
+    console.info("Executed :).")
+
+    commandMap.registerCommand("test" /* Name of command */, root /* Root */, 
+    (sender, args) => { sender.sendMessage("Hi"); }, /* Command execution handler */
+    () => { return ["hello", "world"] } /* Autocompleter handler */
+    );
+
+    listener.registerListener("PlayerChatEvent" /* Event name */, (event) => {
+        console.info("OK.")
+    } /* Handler */)
+
+    scheduler.runTaskTimer(() => { server.broadcastMessage("Hi") }, 20); // Broadcast "Hi" every 20 ticks (1second).
+
 }
 function stop() {
+    console.info("Disabled :(.");
 }
 
-function stealHeart(event) {
 
-    if (!(event.getPlayer() instanceof Java.type("org.bukkit.entity.Player"))) return;
-    
-    let lost = event.getPlayer();
-
-    if (lost.getLastDamageCause() == null) return;
-    if (lost.getLastDamageCause().getEntity() == null) return;
-
-    let gain = lost.getLastDamageCause().getEntity();
-    
-    lost.sendMessage("You lost 1heart.");
-    
-    let gain_maxhl = gain.getAttribute(Java.type("org.bukkit.attribute.Attribute").GENERIC_MAX_HEALTH).getValue();
-    let lost_maxhl = lost.getAttribute(Java.type("org.bukkit.attribute.Attribute").GENERIC_MAX_HEALTH).getValue();
-    gain.setMaxHealth(gain_maxhl + 1);
-    lost.setMaxHealth(lost_maxhl - 1);
-
-}
-```
-Simple broadcast script
-```javascript
-// Async call
-function start() { // sync call
-    scheduler.runTaskTimer(hello_world /* Function */, 20 /* Ticks */)
-}
-function stop() { // sync call
-}
-function hello_world() {
-    server.broadcastMessage("Hello World")
-}
+config // Give props to the backend to be processed.
 ```
 
-# Global variables
-```javascript
-const server = ... // Server object
-const root = ... // Script object
-const scheduler = ... // scheduler for running tasks
-const listener = ... // Listener object for listening events.
-```
 # Extras
 Visit engine docs: [GraalVM JavaInteroperability](https://www.graalvm.org/latest/reference-manual/js/JavaInteroperability/)
 

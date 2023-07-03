@@ -6,7 +6,7 @@
 
     <groupId>me.nazarxexe</groupId>
     <artifactId>JSMC</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>JSMC</name>
@@ -64,6 +64,13 @@
     </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.github.a-langer</groupId>
+            <artifactId>jsr223-commonjs-modules</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
