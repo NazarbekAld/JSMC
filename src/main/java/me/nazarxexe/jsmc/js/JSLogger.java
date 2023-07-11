@@ -2,11 +2,8 @@ package me.nazarxexe.jsmc.js;
 
 import com.caoccao.javet.interception.logging.BaseJavetConsoleInterceptor;
 import com.caoccao.javet.interop.V8Runtime;
-import com.caoccao.javet.utils.V8ValueUtils;
-import com.caoccao.javet.values.V8Data;
 import com.caoccao.javet.values.V8Value;
 import org.slf4j.Logger;
-import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 public class JSLogger extends BaseJavetConsoleInterceptor {

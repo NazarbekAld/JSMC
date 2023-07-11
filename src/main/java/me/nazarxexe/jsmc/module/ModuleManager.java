@@ -2,18 +2,17 @@ package me.nazarxexe.jsmc.module;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
-import net.lingala.zip4j.model.UnzipParameters;
-import net.lingala.zip4j.model.ZipParameters;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,7 +46,7 @@ public class ModuleManager {
         Gson gson = new Gson();
         String data = null;
         try {
-            try(InputStream stream = GitHub.connectAnonymously().getRepositoryById(CENTRAL_ID)
+            try (InputStream stream = GitHub.connectAnonymously().getRepositoryById(CENTRAL_ID)
                     .getFileContent("knownModules.json")
                     .read()) {
                 data = new String(stream.readAllBytes());
@@ -57,7 +56,8 @@ public class ModuleManager {
             return;
         }
 
-        List<Module> modules = gson.fromJson( data, new TypeToken<ArrayList<Module>>(){});
+        List<Module> modules = gson.fromJson(data, new TypeToken<ArrayList<Module>>() {
+        });
 
         cachedModules.addAll(modules);
 
@@ -83,7 +83,7 @@ public class ModuleManager {
             if (tag.isEmpty()) {
                 path = download(GitHub.connectAnonymously().getRepositoryById(module.repoID)
                         .getLatestRelease().getZipballUrl(), to.getAbsolutePath());
-            }else {
+            } else {
                 path = download(GitHub.connectAnonymously().getRepositoryById(module.repoID)
                         .getReleaseByTagName(tag).getZipballUrl(), to.getAbsolutePath());
             }
@@ -101,7 +101,7 @@ public class ModuleManager {
                     skip--;
                     continue;
                 }
-                fileHeader.setFileName( fileHeader.getFileName().replaceFirst("^"+skipDir, "") );
+                fileHeader.setFileName(fileHeader.getFileName().replaceFirst("^" + skipDir, ""));
 
                 zipFile.extractFile(fileHeader, toMod.getAbsolutePath());
             }
@@ -109,8 +109,6 @@ public class ModuleManager {
             path.toFile().delete();
         } catch (IOException e) {
             logger.error("Failed to import module(s)!", e);
-        } catch (ZipException e) {
-            logger.error("Failed to unzip module(s)!", e);
         }
     }
 
@@ -122,7 +120,6 @@ public class ModuleManager {
 
         return targetPath;
     }
-
 
 
 }

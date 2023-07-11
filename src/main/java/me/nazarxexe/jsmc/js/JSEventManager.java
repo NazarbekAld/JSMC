@@ -1,12 +1,9 @@
 package me.nazarxexe.jsmc.js;
 
 import com.caoccao.javet.values.primitive.V8ValueString;
-import com.caoccao.javet.values.reference.V8ValueObject;
-import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
-import it.unimi.dsi.fastutil.Hash;
 import lombok.Setter;
 import me.nazarxexe.jsmc.Project;
 import me.nazarxexe.jsmc.js.customevents.ScriptDisableEvent;
@@ -14,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.*;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredListener;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +30,9 @@ public class JSEventManager {
     private Plugin plugin;
 
     private static final HashMap<String, Class<? extends Event>> eventClasses = new HashMap<>();
-    private JSEventManager() {}
+
+    private JSEventManager() {
+    }
 
     public static JSEventManager getInstance() {
         if (instance == null) {
@@ -92,7 +90,7 @@ public class JSEventManager {
         Class<? extends Event> evc = eventClasses.get(eventName);
 
         Bukkit.getServer().getPluginManager().registerEvent(evc, new Listener() {
-        }, priority == null ? EventPriority.NORMAL : EventPriority.valueOf(priority.getValue()) , new EventExecutor() {
+        }, priority == null ? EventPriority.NORMAL : EventPriority.valueOf(priority.getValue()), new EventExecutor() {
             final Project project = loader;
             JSListener executable = listener;
 

@@ -3,12 +3,9 @@ package me.nazarxexe.jsmc.command.subcommands.module;
 import me.nazarxexe.jsmc.JSMC;
 import me.nazarxexe.jsmc.command.JSMCSubCommand;
 import me.nazarxexe.jsmc.module.ModuleManager;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
-import org.kohsuke.github.GitHub;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +36,7 @@ public class ModuleImport implements JSMCSubCommand {
             sender.sendMessage("Downloading...");
             if (args.length == 3) {
                 ModuleManager.getInstance().importAllTo(JSMC.getLibs(), ModuleManager.getInstance().getKnownModuleByName(args[2]), null);
-            }else {
+            } else {
                 ModuleManager.getInstance().importAllTo(JSMC.getLibs(), ModuleManager.getInstance().getKnownModuleByName(args[2]), args[3]);
             }
             sender.sendMessage("Processed done. Check console for any errors.");

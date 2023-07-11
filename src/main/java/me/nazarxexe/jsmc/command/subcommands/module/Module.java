@@ -1,6 +1,5 @@
 package me.nazarxexe.jsmc.command.subcommands.module;
 
-import me.nazarxexe.jsmc.JSMC;
 import me.nazarxexe.jsmc.command.JSMCSubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -41,7 +40,7 @@ public class Module implements JSMCSubCommand {
 
         JSMCSubCommand sub = null;
         for (JSMCSubCommand subCommand : subCommands) {
-            if (subCommand.name().equals(args[1])){
+            if (subCommand.name().equals(args[1])) {
                 sub = subCommand;
             }
         }

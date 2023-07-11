@@ -2,22 +2,21 @@ package me.nazarxexe.jsmc;
 
 import lombok.Getter;
 import me.nazarxexe.jsmc.command.JSMCCommand;
-import me.nazarxexe.jsmc.command.subcommands.*;
+import me.nazarxexe.jsmc.command.subcommands.Create;
+import me.nazarxexe.jsmc.command.subcommands.Disable;
+import me.nazarxexe.jsmc.command.subcommands.Enable;
+import me.nazarxexe.jsmc.command.subcommands.Scripts;
 import me.nazarxexe.jsmc.command.subcommands.module.Module;
 import me.nazarxexe.jsmc.command.subcommands.module.ModuleImport;
 import me.nazarxexe.jsmc.js.JSEventManager;
 import me.nazarxexe.jsmc.js.customevents.ScriptDisableEvent;
 import me.nazarxexe.jsmc.module.ModuleManager;
-import org.apache.maven.model.Repository;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

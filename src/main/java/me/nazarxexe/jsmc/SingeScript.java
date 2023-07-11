@@ -1,21 +1,12 @@
 package me.nazarxexe.jsmc;
 
 
-import com.caoccao.javet.enums.JSRuntimeType;
-import com.caoccao.javet.enums.V8AwaitMode;
 import com.caoccao.javet.exceptions.JavetException;
-import com.caoccao.javet.interfaces.IJavetBiConsumer;
-import com.caoccao.javet.interfaces.IJavetUniIndexedConsumer;
-import com.caoccao.javet.interop.NodeRuntime;
 import com.caoccao.javet.interop.V8Host;
 import com.caoccao.javet.interop.V8Runtime;
 import com.caoccao.javet.interop.converters.JavetBridgeConverter;
 import com.caoccao.javet.interop.converters.JavetProxyConverter;
-
-import com.caoccao.javet.interop.engine.IJavetEngine;
-import com.caoccao.javet.interop.engine.JavetEnginePool;
-import com.caoccao.javet.values.V8Value;
-import com.caoccao.javet.values.reference.*;
+import com.caoccao.javet.values.reference.V8ValueObject;
 import lombok.Getter;
 import me.nazarxexe.jsmc.js.JSLogger;
 import org.bukkit.Bukkit;
@@ -26,10 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class SingeScript implements Project {
 
