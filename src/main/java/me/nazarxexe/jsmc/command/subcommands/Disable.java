@@ -1,8 +1,11 @@
 package me.nazarxexe.jsmc.command.subcommands;
 
 import me.nazarxexe.jsmc.JSMC;
-import me.nazarxexe.jsmc.Script;
+import me.nazarxexe.jsmc.Project;
+import me.nazarxexe.jsmc.SingeScript;
 import me.nazarxexe.jsmc.command.JSMCSubCommand;
+import me.nazarxexe.jsmc.js.customevents.ScriptDisableEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -17,10 +20,10 @@ public class Disable implements JSMCSubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        Script script = null;
-        for (Script activeScript : JSMC.activeScripts) {
-            if (!(activeScript.file.getName().equals(args[1]))) return;
-            script = activeScript;
+        SingeScript script = null;
+        for (Project activeScript : JSMC.activeScripts) {
+            if (!(activeScript.file().getName().equals(args[1]))) return;
+            script = (SingeScript) activeScript;
         }
 
         if (script == null) {
@@ -32,12 +35,13 @@ public class Disable implements JSMCSubCommand {
             return;
         }
 
+        Bukkit.getServer().getPluginManager().callEvent(new ScriptDisableEvent(script));
         script.stop();
         sender.sendMessage(ChatColor.GREEN + "Disabling the script... Do not forget to check the console.");
     }
 
     @Override
     public List<String> tab(CommandSender sender, String[] args) {
-        return JSMC.getActiveScripts().stream().map(script -> script.file.getName()).collect(Collectors.toList());
+        return JSMC.getActiveScripts().stream().map(script -> script.file().getName()).collect(Collectors.toList());
     }
 }
