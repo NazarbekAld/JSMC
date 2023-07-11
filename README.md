@@ -7,6 +7,7 @@ JavaScript for Paper/Bukkit
 /jsmc enable <script> - enable script.
 /jsmc disable <script> - disable script.
 /jsmc create <project name> - create new script.
+/jsmc module <import> <module_name>
 /jsmc scripts - list of scripts
 ```
 
@@ -16,47 +17,48 @@ Put in folder ../plugins/JSMC/Scripts/ the scripts.
 # Example
 
 ```javascript
-const root = Polyglot.import("root"); // root
-const console = Polyglot.import("console");
-const commandMap = Polyglot.import("commandMap"); // commandMap
-const listener = Polyglot.import("listener"); // Listener
-const scheduler = Polyglot.import("scheduler"); // scheduler
-const server = Polyglot.import("server") // Server
+/**
+    Note that .. refer to plugin datafolder path.
+*/
+import * as Std from "../libs/std/std.mjs";
 
-// Script props:
-const config = {
+// Where Loader got from?
+// Ans: Loader registered manualy in script by plugin.
 
-    name: "hello_world", // More for logger/command_prefix
+console.info("Hi");
+
+Std.Scheduler.task(() => {
+
+    // Sync task that executes after start of the script.
+
+    Std.Listener.on(Loader, "PlayerJumpEvent", (event) => 
+    { event.getPlayer().sendMessage("You jumped.") })
     
-    onEnable: start,
-    onDisable: stop // Optional
+    Std.Listener.on(Loader, "ScriptDisableEvent", (event) => {console.info("BYE")});
 
-}
+    class OwnCommand extends Std.Command {
 
-function start() {
+        constructor() {
+            super("owncommand")
+        }
 
-    console.info("Executed :).")
+        execute(sender, args) {
+            sender.sendMessage("Yo")
 
-    commandMap.registerCommand("test" /* Name of command */, root /* Root */, 
-    (sender, args) => { sender.sendMessage("Hi"); }, /* Command execution handler */
-    () => { return ["hello", "world"] } /* Autocompleter handler */
-    );
+            return true;
+        }
+        tab(sender, args) {
+            return [ "Nope", "No" ]
+        }
 
-    listener.registerListener("PlayerChatEvent" /* Event name */, (event) => {
-        console.info("OK.")
-    } /* Handler */)
+    }
 
-    scheduler.runTaskTimer(() => { server.broadcastMessage("Hi") }, 20); // Broadcast "Hi" every 20 ticks (1second).
+    let owncommand = new OwnCommand();
+    owncommand.register();
+});
 
-}
-function stop() {
-    console.info("Disabled :(.");
-}
-
-
-config // Give props to the backend to be processed.
 ```
 
 # Extras
-Visit engine docs: [GraalVM JavaInteroperability](https://www.graalvm.org/latest/reference-manual/js/JavaInteroperability/)
+Visit engine docs: [Javet](https://www.caoccao.com/Javet/index.html)
 
